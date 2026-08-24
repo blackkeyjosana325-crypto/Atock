@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
+
+<title>Atock</title>
+
+<style>
+
+/* =====================================
+   基础
+===================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+
+    background: #000;
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Microsoft YaHei",
+        sans-serif;
+}
+
+button {
+    font-family: inherit;
+}
+
+
+/* =====================================
+   首页
+===================================== */
+
+.home {
+
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 1000;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        radial-gradient(
+            circle at 50% 35%,
+            #292929 0%,
+            #101010 42%,
+            #000 78%
+        );
+
+    transition:
+        opacity .5s ease,
+        transform .5s ease;
+}
+
+.home.hide {
+
+    opacity: 0;
+
+    transform: scale(1.05);
+
+    pointer-events: none;
+}
+
+.home-content {
+
+    width: 90%;
+
+    max-width: 500px;
+
+    text-align: center;
+
+    color: white;
+}
+
+.logo {
+
+    font-size: 78px;
+
+    font-weight: 900;
+
+    letter-spacing: -6px;
+
+    margin-bottom: 12px;
+}
+
+.logo span {
+
+    color: #ff315c;
+}
+
+.subtitle {
+
+    color: #999;
+
+    font-size: 14px;
+
+    letter-spacing: 4px;
+
+    margin-bottom: 55px;
+}
+
+.start-btn {
+
+    width: 215px;
+
+    height: 58px;
+
+    border: none;
+
+    border-radius: 30px;
+
+    background: white;
+
+    color: black;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: transform .2s ease;
+}
+
+.start-btn:hover {
+
+    transform: scale(1.05);
+}
+
+.start-btn:active {
+
+    transform: scale(.96);
+}
+
+.home-tip {
+
+    margin-top: 25px;
+
+    color: #666;
+
+    font-size: 12px;
+}
+
+
+/* =====================================
+   App
+===================================== */
+
+.app {
+
+    position: fixed;
+
+    inset: 0;
+
+    background: #000;
+}
+
+.feed {
+
+    width: 100%;
+
+    height: 100%;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    scroll-snap-type: y mandatory;
+
+    scroll-behavior: smooth;
+
+    scrollbar-width: none;
+}
+
+.feed::-webkit-scrollbar {
+
+    display: none;
+}
+
+
+/* =====================================
+   每条动态
+===================================== */
+
+.post {
+
+    position: relative;
+
+    width: 100%;
+
+    height: 100vh;
+
+    overflow: hidden;
+
+    background: #111;
+
+    scroll-snap-align: start;
+
+    scroll-snap-stop: always;
+}
+
+
+/* =====================================
+   视频 / 图片
+===================================== */
+
+.media {
+
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+    background: #111;
+}
+
+.image-media {
+
+    object-fit: contain;
+
+    background: #151515;
+}
+
+
+/* =====================================
+   黑色渐变
+===================================== */
+
+.post::after {
+
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.55),
+            transparent 22%,
+            transparent 55%,
+            rgba(0,0,0,.92) 100%
+        );
+}
+
+
+/* =====================================
+   顶部栏
+===================================== */
+
+.topbar {
+
+    position: absolute;
+
+    left: 0;
+
+    right: 0;
+
+    top: 0;
+
+    height: 72px;
+
+    z-index: 20;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 18px;
+
+    color: white;
+}
+
+.atock-mini {
+
+    font-size: 23px;
+
+    font-weight: 900;
+
+    letter-spacing: -1px;
+}
+
+.atock-mini span {
+
+    color: #ff315c;
+}
+
+.top-center {
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+.menu {
+
+    font-size: 26px;
+
+    line-height: 1;
+}
+
+
+/* =====================================
+   用户信息
+===================================== */
+
+.user-area {
+
+    position: absolute;
+
+    left: 18px;
+
+    right: 82px;
+
+    bottom: 27px;
+
+    z-index: 20;
+
+    color: white;
+}
+
+.user {
+
+    display: flex;
+
+    align-items: center;
+
+    margin-bottom: 13px;
+}
+
+.avatar {
+
+    width: 45px;
+
+    height: 45px;
+
+    border-radius: 50%;
+
+    margin-right: 10px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        linear-gradient(
+            135deg,
+            #777,
+            #222
+        );
+
+    border: 2px solid rgba(255,255,255,.85);
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+.username {
+
+    font-size: 17px;
+
+    font-weight: 700;
+}
+
+.follow {
+
+    margin-left: 10px;
+
+    padding: 4px 9px;
+
+    border: 1px solid rgba(255,255,255,.8);
+
+    border-radius: 5px;
+
+    font-size: 11px;
+}
+
+.caption {
+
+    font-size: 16px;
+
+    line-height: 1.6;
+
+    margin-bottom: 7px;
+}
+
+.date {
+
+    font-size: 12px;
+
+    color: rgba(255,255,255,.7);
+}
+
+
+/* =====================================
+   右侧操作栏
+===================================== */
+
+.actions {
+
+    position: absolute;
+
+    right: 12px;
+
+    bottom: 86px;
+
+    z-index: 30;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 18px;
+}
+
+.action {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    color: white;
+
+    cursor: pointer;
+
+    user-select: none;
+}
+
+.action-icon {
+
+    width: 46px;
+
+    height: 46px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: rgba(0,0,0,.38);
+
+    backdrop-filter: blur(8px);
+
+    font-size: 23px;
+
+    transition:
+        transform .15s ease,
+        background .15s ease;
+}
+
+.action:hover .action-icon {
+
+    transform: scale(1.08);
+
+    background: rgba(0,0,0,.55);
+}
+
+.action:active .action-icon {
+
+    transform: scale(.92);
+}
+
+.action-text {
+
+    margin-top: 4px;
+
+    font-size: 11px;
+}
+
+.like-btn.active .action-icon {
+
+    color: #ff315c;
+}
+
+
+/* =====================================
+   声音按钮
+===================================== */
+
+.sound-button {
+
+    position: absolute;
+
+    right: 12px;
+
+    bottom: 290px;
+
+    z-index: 50;
+
+    width: 50px;
+
+    height: 50px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: white;
+
+    background: rgba(0,0,0,.48);
+
+    backdrop-filter: blur(10px);
+
+    font-size: 23px;
+
+    cursor: pointer;
+
+    transition:
+        transform .15s ease,
+        background .15s ease;
+}
+
+.sound-button:hover {
+
+    transform: scale(1.08);
+
+    background: rgba(0,0,0,.65);
+}
+
+.sound-button:active {
+
+    transform: scale(.9);
+}
+
+
+/* =====================================
+   暂停按钮
+===================================== */
+
+.play-overlay {
+
+    position: absolute;
+
+    left: 50%;
+
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 70px;
+
+    height: 70px;
+
+    border-radius: 50%;
+
+    z-index: 15;
+
+    display: none;
+
+    align-items: center;
+
+    justify-content: center;
+
+    color: white;
+
+    background: rgba(0,0,0,.45);
+
+    backdrop-filter: blur(8px);
+
+    font-size: 30px;
+
+    pointer-events: none;
+}
+
+.post.paused .play-overlay {
+
+    display: flex;
+}
+
+
+/* =====================================
+   滑动提示
+===================================== */
+
+.swipe-tip {
+
+    position: fixed;
+
+    left: 50%;
+
+    bottom: 8px;
+
+    transform: translateX(-50%);
+
+    z-index: 40;
+
+    color: rgba(255,255,255,.55);
+
+    font-size: 11px;
+
+    pointer-events: none;
+}
+
+
+/* =====================================
+   手机端
+===================================== */
+
+@media (max-width: 500px) {
+
+    .sound-button {
+
+        bottom: 295px;
+
+        right: 10px;
+    }
+
+}
+
+
+/* =====================================
+   桌面端模拟手机
+===================================== */
+
+@media (min-width: 700px) {
+
+    .app {
+
+        background: #080808;
+    }
+
+    .feed {
+
+        width: 430px;
+
+        margin: 0 auto;
+
+        box-shadow:
+            0 0 90px rgba(0,0,0,.85);
+    }
+
+}
+
+
+/* =====================================
+   小屏幕
+===================================== */
+
+@media (max-width: 380px) {
+
+    .logo {
+
+        font-size: 65px;
+    }
+
+    .caption {
+
+        font-size: 15px;
+    }
+
+    .user-area {
+
+        right: 70px;
+    }
+
+    .actions {
+
+        right: 8px;
+    }
+
+    .sound-button {
+
+        right: 8px;
+
+        bottom: 285px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- ==========================================
+     Atock 首页
+========================================== -->
+
+<section
+    class="home"
+    id="home"
+>
+
+    <div class="home-content">
+
+        <div class="logo">
+            A<span>t</span>ock
+        </div>
+
+        <div class="subtitle">
+            SEE WHAT HAPPENS
+        </div>
+
+        <button
+            class="start-btn"
+            onclick="startExploring()"
+        >
+            开始探索
+        </button>
+
+        <div class="home-tip">
+            上下滑动 · 探索动态
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- ==========================================
+     Atock
+========================================== -->
+
+<main class="app">
+
+    <div
+        class="feed"
+        id="feed"
+    >
+
+
+        <!-- ==================================
+             动态 1：黄杰
+        =================================== -->
+
+        <article class="post">
+
+            <video
+                class="media"
+                src="ganbei.MP4"
+                loop
+                playsinline
+                preload="metadata"
+            ></video>
+
+
+            <div class="play-overlay">
+                ▶
+            </div>
+
+
+            <div class="topbar">
+
+                <div class="atock-mini">
+                    A<span>t</span>ock
+                </div>
+
+                <div class="top-center">
+                    动态
+                </div>
+
+                <div class="menu">
+                    ⋯
+                </div>
+
+            </div>
+
+
+            <!-- 声音按钮 -->
+
+            <button
+                class="sound-button"
+                onclick="toggleSound(this)"
+                aria-label="声音开关"
+            >
+                🔊
+            </button>
+
+
+            <!-- 右侧操作 -->
+
+            <div class="actions">
+
+                <div class="action like-btn">
+
+                    <div class="action-icon">
+                        ♡
+                    </div>
+
+                    <div class="action-text">
+                        喜欢
+                    </div>
+
+                </div>
+
+
+                <div class="action">
+
+                    <div class="action-icon">
+                        💬
+                    </div>
+
+                    <div class="action-text">
+                        评论
+                    </div>
+
+                </div>
+
+
+                <div class="action">
+
+                    <div class="action-icon">
+                        ↗
+                    </div>
+
+                    <div class="action-text">
+                        分享
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- 用户信息 -->
+
+            <div class="user-area">
+
+                <div class="user">
+
+                    <div class="avatar">
+                        黄
+                    </div>
+
+                    <div class="username">
+                        黄杰
+                    </div>
+
+                    <div class="follow">
+                        关注
+                    </div>
+
+                </div>
+
+
+                <div class="caption">
+                    来看一下年轻人喜欢的音乐现场。
+                </div>
+
+
+                <div class="date">
+                    2026/5/15 22:00
+                </div>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ==================================
+             动态 2：叶倩倩图片
+        =================================== -->
+
+        <article class="post">
+
+            <img
+                class="media image-media"
+                src="yqq.png"
+                alt="叶倩倩发布的图片"
+            >
+
+
+            <div class="topbar">
+
+                <div class="atock-mini">
+                    A<span>t</span>ock
+                </div>
+
+                <div class="top-center">
+                    动态
+                </div>
+
+                <div class="menu">
+                    ⋯
+                </div>
+
+            </div>
+
+
+            <!-- 图片也保留声音按钮，
+                 点击后不会产生声音 -->
+
+            <button
+                class="sound-button"
+                onclick="toggleSound(this)"
+                aria-label="声音开关"
+            >
+                🔊
+            </button>
+
+
+            <div class="actions">
+
+                <div class="action like-btn">
+
+                    <div class="action-icon">
+                        ♡
+                    </div>
+
+                    <div class="action-text">
+                        喜欢
+                    </div>
+
+                </div>
+
+
+                <div class="action">
+
+                    <div class="action-icon">
+                        💬
+                    </div>
+
+                    <div class="action-text">
+                        评论
+                    </div>
+
+                </div>
+
+
+                <div class="action">
+
+                    <div class="action-icon">
+                        ↗
+                    </div>
+
+                    <div class="action-text">
+                        分享
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="user-area">
+
+                <div class="user">
+
+                    <div class="avatar">
+                        叶
+                    </div>
+
+                    <div class="username">
+                        叶倩倩
+                    </div>
+
+                    <div class="follow">
+                        关注
+                    </div>
+
+                </div>
+
+
+                <div class="caption">
+                    期待一周之后的自己
+                </div>
+
+
+                <div class="date">
+                    2026/5/11 10:00
+                </div>
+
+            </div>
+
+        </article>
+
+
+
+        <!-- ==================================
+             动态 3：叶倩倩
+        =================================== -->
+
+        <article class="post">
+
+            <video
+                class="media"
+                src="wangu.mp4"
+                loop
+                playsinline
+                preload="metadata"
+            ></video>
+
+
+            <div class="play-overlay">
+                ▶
+            </div>
+
+
+            <div class="topbar">
+
+                <div class="atock-mini">
+                    A<span>t</span>ock
+                </div>
+
+                <div class="top-center">
+                    动态
+                </div>
+
+                <div class="menu">
+                    ⋯
+                </div>
+
+            </div>
+
+
+            <!-- 声音按钮 -->
+
+            <button
+                class="sound-button"
+                onclick="toggleSound(this)"
+                aria-label="声音开关"
+            >
+                🔊
+            </button>
+
+
+            <div class="actions">
+
+                <div class="action like-btn">
+
+                    <div class="action-icon">
+                        ♡
+                    </div>
+
+                    <div class="action-text">
+                        喜欢
+                    </div>
+
+                </div>
+
+
+                <div class="action">
+
+                    <div class="action-icon">
+                        💬
+                    </div>
+
+                    <div class="action-text">
+                        评论
+                    </div>
+
+                </div>
+
+
+                <div class="action">
+
+                    <div class="action-icon">
+                        ↗
+                    </div>
+
+                    <div class="action-text">
+                        分享
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="user-area">
+
+                <div class="user">
+
+                    <div class="avatar">
+                        叶
+                    </div>
+
+                    <div class="username">
+                        叶倩倩
+                    </div>
+
+                    <div class="follow">
+                        关注
+                    </div>
+
+                </div>
+
+
+                <div class="caption">
+                    是否还相信那顽固的自己 🥕
+                </div>
+
+
+                <div class="date">
+                    2026/5/18 22:30
+                </div>
+
+            </div>
+
+        </article>
+
+
+    </div>
+
+
+    <div class="swipe-tip">
+        ↑ ↓　滑动探索
+    </div>
+
+</main>
+
+
+
+<script>
+
+/* =========================================
+   全局声音状态
+========================================= */
+
+let soundEnabled = true;
+
+
+/* =========================================
+   开始探索
+========================================= */
+
+function startExploring() {
+
+    const home =
+        document.getElementById("home");
+
+    home.classList.add("hide");
+
+
+    setTimeout(() => {
+
+        home.style.display = "none";
+
+
+        const firstVideo =
+            document.querySelector(
+                ".post video"
+            );
+
+
+        if (firstVideo) {
+
+            firstVideo.muted =
+                !soundEnabled;
+
+            firstVideo.volume = 1;
+
+
+            firstVideo.play()
+                .catch(error => {
+
+                    console.log(
+                        "浏览器阻止了自动播放：",
+                        error
+                    );
+
+                });
+
+        }
+
+    }, 500);
+
+}
+
+
+
+/* =========================================
+   声音开关
+========================================= */
+
+function toggleSound(button) {
+
+    soundEnabled =
+        !soundEnabled;
+
+
+    /*
+       找到当前动态
+    */
+
+    const post =
+        button.closest(".post");
+
+
+    /*
+       找到当前动态中的视频
+    */
+
+    const video =
+        post.querySelector("video");
+
+
+    /*
+       如果当前动态没有视频
+       就只改变按钮状态
+    */
+
+    if (video) {
+
+        if (soundEnabled) {
+
+            video.muted = false;
+
+            video.volume = 1;
+
+            button.innerHTML = "🔊";
+
+
+            /*
+               如果视频已经暂停，
+               不主动播放。
+            */
+
+            if (!video.paused) {
+
+                video.play()
+                    .catch(() => {});
+
+            }
+
+        } else {
+
+            video.muted = true;
+
+            button.innerHTML = "🔇";
+
+        }
+
+    } else {
+
+        /*
+           图片动态
+        */
+
+        button.innerHTML =
+            soundEnabled
+                ? "🔊"
+                : "🔇";
+
+    }
+
+
+    /*
+       同步所有动态右侧声音按钮
+    */
+
+    document
+        .querySelectorAll(".sound-button")
+        .forEach(btn => {
+
+            btn.innerHTML =
+                soundEnabled
+                    ? "🔊"
+                    : "🔇";
+
+        });
+
+
+    /*
+       同步所有视频
+    */
+
+    document
+        .querySelectorAll("video")
+        .forEach(v => {
+
+            v.muted =
+                !soundEnabled;
+
+        });
+
+}
+
+
+
+/* =========================================
+   视频进入屏幕自动播放
+========================================= */
+
+const posts =
+    document.querySelectorAll(".post");
+
+
+const observer =
+    new IntersectionObserver(
+
+        entries => {
+
+            entries.forEach(entry => {
+
+                const post =
+                    entry.target;
+
+
+                const video =
+                    post.querySelector("video");
+
+
+                if (!video) {
+                    return;
+                }
+
+
+                if (entry.isIntersecting) {
+
+                    /*
+                       使用全局声音状态
+                    */
+
+                    video.muted =
+                        !soundEnabled;
+
+                    video.volume = 1;
+
+
+                    video.play()
+                        .then(() => {
+
+                            post.classList
+                                .remove("paused");
+
+                        })
+                        .catch(() => {
+
+                            /*
+                               浏览器拒绝播放时，
+                               不弹错误
+                            */
+
+                        });
+
+                } else {
+
+                    video.pause();
+
+                    post.classList
+                        .remove("paused");
+
+                }
+
+            });
+
+        },
+
+        {
+            threshold: 0.65
+        }
+
+    );
+
+
+posts.forEach(post => {
+
+    observer.observe(post);
+
+});
+
+
+
+/* =========================================
+   点击视频暂停 / 播放
+========================================= */
+
+document
+    .querySelectorAll("video")
+    .forEach(video => {
+
+
+        video.addEventListener(
+            "click",
+            () => {
+
+                const post =
+                    video.closest(".post");
+
+
+                if (video.paused) {
+
+                    video.muted =
+                        !soundEnabled;
+
+                    video.volume = 1;
+
+
+                    video.play()
+                        .then(() => {
+
+                            post.classList
+                                .remove("paused");
+
+                        })
+                        .catch(() => {});
+
+
+                } else {
+
+                    video.pause();
+
+                    post.classList
+                        .add("paused");
+
+                }
+
+            }
+        );
+
+    });
+
+
+
+/* =========================================
+   点赞
+========================================= */
+
+document
+    .querySelectorAll(".like-btn")
+    .forEach(button => {
+
+
+        button.addEventListener(
+            "click",
+            () => {
+
+                button.classList
+                    .toggle("active");
+
+
+                const icon =
+                    button.querySelector(
+                        ".action-icon"
+                    );
+
+
+                if (
+                    button.classList
+                        .contains("active")
+                ) {
+
+                    icon.innerHTML =
+                        "♥";
+
+                } else {
+
+                    icon.innerHTML =
+                        "♡";
+
+                }
+
+            }
+        );
+
+    });
+
+
+
+/* =========================================
+   鼠标滚轮
+========================================= */
+
+let scrolling = false;
+
+
+const feed =
+    document.getElementById("feed");
+
+
+feed.addEventListener(
+
+    "wheel",
+
+    event => {
+
+        event.preventDefault();
+
+
+        if (scrolling) {
+            return;
+        }
+
+
+        scrolling = true;
+
+
+        const direction =
+            event.deltaY > 0
+                ? 1
+                : -1;
+
+
+        const current =
+            Math.round(
+                feed.scrollTop /
+                window.innerHeight
+            );
+
+
+        let target =
+            current + direction;
+
+
+        target =
+            Math.max(
+                0,
+                Math.min(
+                    posts.length - 1,
+                    target
+                )
+            );
+
+
+        feed.scrollTo({
+
+            top:
+                target *
+                window.innerHeight,
+
+            behavior:
+                "smooth"
+
+        });
+
+
+        setTimeout(() => {
+
+            scrolling = false;
+
+        }, 650);
+
+    },
+
+    {
+        passive: false
+    }
+
+);
+
+
+
+/* =========================================
+   键盘上下键
+========================================= */
+
+document.addEventListener(
+
+    "keydown",
+
+    event => {
+
+
+        if (
+            event.key !== "ArrowDown" &&
+            event.key !== "ArrowUp"
+        ) {
+
+            return;
+
+        }
+
+
+        const current =
+            Math.round(
+                feed.scrollTop /
+                window.innerHeight
+            );
+
+
+        let target =
+            current;
+
+
+        if (
+            event.key === "ArrowDown"
+        ) {
+
+            target++;
+
+        }
+
+
+        if (
+            event.key === "ArrowUp"
+        ) {
+
+            target--;
+
+        }
+
+
+        target =
+            Math.max(
+                0,
+                Math.min(
+                    posts.length - 1,
+                    target
+                )
+            );
+
+
+        feed.scrollTo({
+
+            top:
+                target *
+                window.innerHeight,
+
+            behavior:
+                "smooth"
+
+        });
+
+    }
+
+);
+
+
+
+/* =========================================
+   手机触摸滑动
+========================================= */
+
+let touchStartY = 0;
+
+let touchEndY = 0;
+
+
+feed.addEventListener(
+
+    "touchstart",
+
+    event => {
+
+        touchStartY =
+            event.changedTouches[0]
+                .screenY;
+
+    }
+
+);
+
+
+feed.addEventListener(
+
+    "touchend",
+
+    event => {
+
+        touchEndY =
+            event.changedTouches[0]
+                .screenY;
+
+
+        const difference =
+            touchStartY -
+            touchEndY;
+
+
+        if (
+            Math.abs(difference) < 50
+        ) {
+
+            return;
+
+        }
+
+
+        const current =
+            Math.round(
+                feed.scrollTop /
+                window.innerHeight
+            );
+
+
+        let target =
+            current;
+
+
+        if (difference > 0) {
+
+            target++;
+
+        } else {
+
+            target--;
+
+        }
+
+
+        target =
+            Math.max(
+                0,
+                Math.min(
+                    posts.length - 1,
+                    target
+                )
+            );
+
+
+        feed.scrollTo({
+
+            top:
+                target *
+                window.innerHeight,
+
+            behavior:
+                "smooth"
+
+        });
+
+    }
+
+);
+
+</script>
+
+</body>
+</html>
